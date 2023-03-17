@@ -1,11 +1,11 @@
-public class MyLinkedList {
-    private Node head;
-    private Node tail;
+public class MyLinkedList<T> {
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     //add додає елемент в кінець
-    public void add(Object value) {
-        Node newNode = new Node(value);
+    public void add(T value) {
+        Node<T> newNode = new Node<>(value);
 
         if (head == null) {
             head = newNode;
@@ -17,13 +17,14 @@ public class MyLinkedList {
         tail = newNode;
         size++;
     }
+
     //remove видаляє елемент із вказаним індексом
     public void remove(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
 
-        Node current = head;
+        Node<T> current = head;
 
         for (int i = 0; i < index; i++) {
             current = current.next;
@@ -43,23 +44,26 @@ public class MyLinkedList {
 
         size--;
     }
+
     //clear очищає колекцію
     public void clear() {
         head = null;
         tail = null;
         size = 0;
     }
+
     //size повертає розмір колекції
     public int size() {
         return size;
     }
+
     //get повертає елемент за індексом
-    public Object get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
 
-        Node current = head;
+        Node<T> current = head;
 
         for (int i = 0; i < index; i++) {
             current = current.next;
@@ -68,12 +72,12 @@ public class MyLinkedList {
         return current.value;
     }
 
-    private class Node {
-        private Object value;
-        private Node prev;
-        private Node next;
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
-        public Node(Object value) {
+        public Node(T value) {
             this.value = value;
         }
     }

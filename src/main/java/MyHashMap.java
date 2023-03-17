@@ -1,23 +1,23 @@
 import java.util.Arrays;
 
-public class MyHashMap {
+public class MyHashMap<T> {
 
-    private Node[] buckets;
+    private Node<T>[] buckets;
     private int size;
 
-    // ініціалізація
     public MyHashMap() {
         this.buckets = new Node[16];
         this.size = 0;
     }
-    private int hash(Object key) {
+
+    private int hash(T key) {
         return Math.abs(key.hashCode() % buckets.length);
     }
-    // додає пару ключ + значення
-    public void put(Object key, Object value) {
+
+    public void put(T key, T value) {
         int index = hash(key);
-        Node head = buckets[index];
-        Node node = head;
+        Node<T> head = buckets[index];
+        Node<T> node = head;
         while (node != null) {
             if (node.key.equals(key)) {
                 node.value = value;
@@ -25,15 +25,15 @@ public class MyHashMap {
             }
             node = node.next;
         }
-        Node newNode = new Node(key, value);
+        Node<T> newNode = new Node<>(key, value);
         newNode.next = head;
         buckets[index] = newNode;
         size++;
     }
-    // повертає значення (Object value) за ключем
-    public Object get(Object key) {
+
+    public T get(T key) {
         int index = hash(key);
-        Node node = buckets[index];
+        Node<T> node = buckets[index];
         while (node != null) {
             if (node.key.equals(key)) {
                 return node.value;
@@ -42,10 +42,10 @@ public class MyHashMap {
         }
         return null;
     }
-    // видаляє пару за ключем
-    public void remove(Object key) {
+
+    public void remove(T key) {
         int index = hash(key);
-        Node head = buckets[index];
+        Node<T> head = buckets[index];
         if (head == null) {
             return;
         }
@@ -54,8 +54,8 @@ public class MyHashMap {
             size--;
             return;
         }
-        Node prev = head;
-        Node curr = head.next;
+        Node<T> prev = head;
+        Node<T> curr = head.next;
         while (curr != null) {
             if (curr.key.equals(key)) {
                 prev.next = curr.next;
@@ -66,22 +66,22 @@ public class MyHashMap {
             curr = curr.next;
         }
     }
-    // очищає колекцію
+
     public void clear() {
         Arrays.fill(buckets, null);
         size = 0;
     }
-    // повертає розмір колекції
+
     public int size() {
         return size;
     }
 
-    private static class Node {
-        private Object key;
-        private Object value;
-        private Node next;
+    private static class Node<T> {
+        private T key;
+        private T value;
+        private Node<T> next;
 
-        public Node(Object key, Object value) {
+        public Node(T key, T value) {
             this.key = key;
             this.value = value;
             this.next = null;

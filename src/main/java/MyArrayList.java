@@ -21,15 +21,13 @@ public class MyArrayList<T> {
         }
         return data[index];
     }
-    //remove видаляє елемент із вказаним індексом
+    //remove видаляє елемент із вказаним індексом(оптимізований)
     public T remove(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
         T value = data[index];
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
-        }
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
         return value;
     }
