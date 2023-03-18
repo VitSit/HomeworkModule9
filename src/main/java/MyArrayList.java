@@ -3,8 +3,8 @@ public class MyArrayList<T> {
     private int size;
 
     public MyArrayList() {
-        data = (T[]) new Object[10];
-        size = 0;
+        this.data = (T[]) new Object[10];
+        this.size = 0;
     }
     //add додає елемент в кінець
     public void add(T value) {
@@ -21,16 +21,19 @@ public class MyArrayList<T> {
         }
         return data[index];
     }
-    //remove видаляє елемент із вказаним індексом(оптимізований)
-    public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
+    //remove видаляє елемент із вказаним індексом
+    public void remove(int index){
+        int newSize = size - 1;
+        if (newSize > index){
+            System.arraycopy(data, index + 1, data, index, newSize - index);
+        }else {
+            data[index] = null;
         }
-        T value = data[index];
-        System.arraycopy(data, index + 1, data, index, size - index - 1);
-        size--;
-        return value;
+        data[newSize] = null;
+
+        size = newSize;
     }
+
     //clear очищає колекцію
     public void clear() {
         size = 0;

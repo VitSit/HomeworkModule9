@@ -1,61 +1,82 @@
 import java.util.Arrays;
+import java.util.Queue;
+import java.util.StringJoiner;
 
-public class MyQueue<T> {
-    private T[] queueArray;
-    private int frontIndex;
-    private int rearIndex;
+public class MyQueue <E> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private  Object [] data;
     private int size;
-
-    public MyQueue(int capacity) {
-        queueArray = (T[]) new Object[capacity];
-        frontIndex = 0;
-        rearIndex = -1;
-        size = 0;
+    public MyQueue(){
+        this.data = new Object[DEFAULT_CAPACITY];
+        this.size = 0;
     }
 
-    public MyQueue() {
-        this(10);
+    public MyQueue(int size){
+        this.data = new Object[size];
+        this.size = 0;
     }
-
-    public void add(T value) {
-        if (size == queueArray.length) {
-            T[] newQueueArray = (T[]) new Object[queueArray.length * 2];
-            System.arraycopy(queueArray, frontIndex, newQueueArray, 0, size);
-            queueArray = newQueueArray;
-            frontIndex = 0;
-            rearIndex = size - 1;
+    public void add(E value){
+        if(size == data.length){
+            int newSize = (data.length * 3)/2 + 1;
+            Object[] tempData;
+            tempData = Arrays.copyOf(data, newSize);
+            data = tempData;
         }
-        rearIndex = (rearIndex + 1) % queueArray.length;
-        queueArray[rearIndex] = value;
-        size++;
+        data[size]=value;
+        size = size + 1;
     }
-
-    public void clear() {
-        Arrays.fill(queueArray, null); //може це трохи оптимізує clear, було "queueArray = (T[]) new Object[queueArray.length];"
-        frontIndex = 0;
-        rearIndex = -1;
+    public void clear(){
+        for (int i =0; i < size; i++) {
+            data[i] = null;
+        }
         size = 0;
-    }
 
-    public int size() {
+    }
+    public int size(){
         return size;
     }
-
-    public T peek() {
-        if (size == 0) {
-            return null;
-        }
-        return queueArray[frontIndex];
+    private Object get(int index){
+        return  data[index];
     }
-    // метод poll добре оптимізований, не розумію як можна ще його змінювати, в завданні цього немає
-    public T poll() {
-        if (size == 0) {
+    public E peek(){
+        if (size==0){
             return null;
+        } else {
+            return (E) get(0);
         }
-        T value = queueArray[frontIndex];
-        queueArray[frontIndex] = null;
-        frontIndex = (frontIndex + 1) % queueArray.length;
-        size--;
-        return value;
+    }
+    private void remove(int index){
+        int newSize = size - 1;
+        if (newSize > index){
+            System.arraycopy(data, index + 1, data, index, newSize - index);
+        } else {
+            data[index] = null;
+        }
+        data[newSize] = null;
+
+        size = newSize;
+    }
+    public E poll(){
+        if (size==0){
+            return null;
+        } else {
+            Object firstElement = data[0];
+            data[0] = null;
+            remove(0);
+            size--;
+            return (E) firstElement ;
+        }
+
+    }
+    @Override
+    public String toString() {
+        StringJoiner result = new StringJoiner(",");
+
+        for (Object element:data) {
+            if(element!=null) {
+                result.add(element.toString());
+            }
+        }
+        return "{"+result+"}";
     }
 }
